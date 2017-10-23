@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+  
+    <link type="text/css" rel="stylesheet" href="css/font-awesome.min.css">
+    <link type="text/css" rel="stylesheet" href="css/reset.css">
+    <link type="text/css" rel="stylesheet" href="css/common.css">
+      <link type="text/css" rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="wrap">
+       <div class="top">
+          <input type="checkbox" v-model="selectAll">全选
+       </div>
+        <div class="center">
+            <ul v-for="(item,index) in goods">
+                <li class="checkbox"><input type="checkbox" v-model="item.isSelected" ></li>
+                <li class="main">
+                    <dl>
+                        <dt><img :src="item.info.image" alt=""></dt>
+                        <dd>{{item.info.name}}</dd>
+                    </dl>
+                </li>
+                <li class="choose"  @mouseenter={{show($event)}} @mouseout={{hide($event)}}>
+                    <div class="Pa3mep" v-for="specItem in item.spec"><span>{{specItem.name+":"+specItem.value}}</span></div>
+                       <ol>
+                        <li v-for="specItem in item.spec">
+                            {{specItem.name}}:
+                              <main v-if="specItem.type == 'radio'" style="display:block;">
+                                <div v-for="(val,index2) in specItem.data" :key="index+''+index2" class="box">
+                                    <input id="ipt" style="display:none;" class="radio" type="radio" :name="specItem.key" :value="val" v-model="specItem.value" :id="index+''+index2+specItem.key" />
+                                    <label :for="index+''+index2+specItem.key">
+                                        {{val}}
+                                    </label>
+                                </div>
+                            </main>
+                            <main v-if="specItem.type == 'text'" style="display:block;">
+                                <input type="text" :name="specItem.key" :value="specItem.value" v-model="specItem.value" />
+                            </main>
+                           
+                        </li>
+                      
+                        <li>
+                            <button @click="sure()">Confirm</button><button @click="cancel()">Cancel</button>
+                        </li>
+                    </ol>
+                </li>
+                <li class="money">
+                    <h3>单价:${{item.info.price}}</h3>
+                </li>
+                <li class="count">
+                    <span @click="changeMoney(item.info,'reduce')">-</span>
+                    <input type="text"  disabled :value="item.info.num" v-model="item.info.num" >
+                    <span @click="changeMoney(item.info,'add')">+</span>
+                </li>
+                <li class="all">
+                    <h4>合计:US${{item.info.price*item.info.num}}</h4>
+                </li>
+                <li class="delete">
+                    <i class="fa fa-trash"></i><b @click="remove(index)">删除</b>
+                </li>
+            </ul>
+            
+        </div>
+        <div class="bottom">
+            <div class="price">总计:<b>{{allPrice}}</b><br>一共几件商品:<em style="font-style:normal">{{allCount}}</em></div>
+            <div class="account" @click="settlement()"><button >结算</button></div>
+        </div>
+    <div class="like" >
+            <dl v-for="(items,index3) in list" @click="render(items,index3)">
+                <dt><img :src="items.info.image" alt=""></dt>
+                <dd>{{items.info.name}}</dd>
+                <dd>${{items.info.price}}</dd>
+            </dl>
+       </div>
+    </div>
+  
+    <script type="text/javascript" src="js/vue.min.js"></script>
+    <script type="text/javascript" src="js/jquery1.7.js"></script>
+    <script type="text/javascript" src="js/gouwuche.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>

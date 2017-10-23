@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .layout{
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: rgba(0,0,0,.6);
+            width: 100%;
+            height: 100%;
+        }
+        .dialog-container{
+            width: 70%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            background: #fff;
+            min-height: 150px;
+            transform:translate3d(-50%,-50%,0);
+            display:flex;
+            flex-direction: column;
+            border:1px solid #999;
+        }
+        .dialog-title{
+            line-height: 30px;
+            text-align: center;
+            border-bottom:1px solid #999;
+        }
+        .dialog-content{
+            flex: 1;
+            border-bottom: 1px solid #999;
+            padding-left: 10px;
+        }
+        .dialog-btns{
+            line-height: 30px;
+            text-align: center;
+        }
+        .dialog-btns button{
+            padding:3px 5px;
+            margin: 8px;
+        }
+    </style>
+</head>
+<body>
+    <button>点击弹出提示框</button>
+    <script>
+        class Dialog{
+            constructor(options){
+                this.show = this.show.bind(this);
+            }
+            init(options){
+                let layout = document.querySelector('.layout');
+                if(!layout){
+                    layout = this.creatEle('div',{class:'layout'},this.temp(options));
+                    this.layout = layout;
+                    document.body.appendChild(layout);
+                    this.bindEvent(options);
+                }
+            }
+            temp(options){
+                let {title,info} = options;
+                return `
+                    <div class="dialog-container">
+                        <div class="dialog-title">
+                            <h4>${title}</h4>
+                        </div>
+                        <div class="dialog-content">
+                            <p>${info}</p>
+                        </div>
+                        <div class="dialog-btns">
+                            <button class="certain">确定</button><button class="cancel">取消</button>
+                        </div>
+                    </div>
+                `
+            }
+            creatEle(tag,props={class:''},text=''){
+                let ele = document.createElement(tag);
+                for(var k in props){
+                    ele.setAttribute(k,props[k])
+                }
+                ele.innerHTML = text;
+                return ele;
+            }
+            bindEvent(options){
+                let {callback} = options;
+                document.querySelector('.certain').addEventListener('click',()=>{
+                    this.hide();
+                    callback&&callback();
+                },false)
+                document.querySelector('.cancel').addEventListener('click',()=>{
+                    this.hide();
+                    callback&&callback();
+                },false)
+            }
+            show(options={title:'',info:''}){
+                this.init(options);
+            }
+            hide(){
+                document.body.removeChild(this.layout)
+            }
+        }
+        document.querySelector('button').addEventListener('click',()=>{
+            const {show} = new Dialog()
+            show({
+                title:'this is a Title',
+                info:'this is content about what you have to know',
+                callback:function(){
+                    alert('已完成')
+                }
+            })
+        })
+        
+    </script>
+</body>
+</html>
